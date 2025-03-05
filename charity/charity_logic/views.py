@@ -7,10 +7,10 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
 
-TELEGRAM_BOT_TOKEN = "7003776520:AAHlIQly8I9E7_Ss90Up4McNpJSwwuAAgpY"
-ADMIN_CHAT_ID = "1380803567"
+TELEGRAM_BOT_TOKEN = ""
+ADMIN_CHAT_ID = ""
 
-BOT_USERNAME = "r_e_d_H_e_A_Dbot"
+BOT_USERNAME = ""
 
 
 def redirect_to_bot(request):
