@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
 from aiogram.filters import Command
 
-TOKEN = "7003776520:AAHlIQly8I9E7_Ss90Up4McNpJSwwuAAgpY"
+TOKEN = ""
 DJANGO_API_URL = "http://127.0.0.1:8000/register-user/"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
