@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -12,7 +13,7 @@ SECRET_KEY = 'django-insecure-&98vj&zx#5orwz)9(45nasv@(u1_1b%wrzokz_cxyu1_@1u6u0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -25,9 +26,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # THIRD_PARTY PACKAGES
     'rest_framework',
+    "rest_framework_simplejwt",
+    'payme',
+    'click_up',
+
+    # Inner apps
     'charity_logic',
+    "user_auth",
+    'payment',
+    'telegram_bot'
+
 ]
+
+AUTH_USER_MODEL = "user_auth.CustomUser"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,6 +72,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'charity.wsgi.application'
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -122,3 +142,18 @@ UNFOLD = {
         },
     },
 }
+
+from getenv import env
+
+PAYME_ID = os.getenv('PAYME_ID')
+PAYME_KEY = os.getenv('PAYME_KEY')
+PAYME_ACCOUNT_FIELD = "order_id"
+PAYME_AMOUNT_FIELD = "total_cost"
+PAYME_ACCOUNT_MODEL = "payment.models.Order"
+PAYME_ONE_TIME_PAYMENT = True
+
+CLICK_SERVICE_ID = os.getenv('CLICK_SERVICE_ID')
+CLICK_MERCHANT_ID = os.getenv("CLICK_MERCHANT_ID")
+CLICK_SECRET_KEY = os.getenv("CLICK_SECRET_KEY")
+CLICK_ACCOUNT_MODEL = "payment.models.Order"
+CLICK_AMOUNT_FIELD = "total_cost"

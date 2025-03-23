@@ -1,0 +1,12 @@
+[33meedcd39[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mv3[m[33m, [m[1;31morigin/v3[m[33m)[m HEAD@{0}: reset: moving to origin/v3
+[33meedcd39[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mv3[m[33m, [m[1;31morigin/v3[m[33m)[m HEAD@{1}: reset: moving to eedcd39
+[33meedcd39[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mv3[m[33m, [m[1;31morigin/v3[m[33m)[m HEAD@{2}: reset: moving to HEAD~1
+[33m89095c0[m HEAD@{3}: commit: payment, user authentication and tg bot
+[33meedcd39[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mv3[m[33m, [m[1;31morigin/v3[m[33m)[m HEAD@{4}: commit: payment, user authentication and tg bot
+[33m58db4bd[m[33m ([m[1;32mv2[m[33m)[m HEAD@{5}: checkout: moving from v2 to v3
+[33m58db4bd[m[33m ([m[1;32mv2[m[33m)[m HEAD@{6}: commit: Second commit
+[33m5de7558[m[33m ([m[1;32mmain[m[33m)[m HEAD@{7}: checkout: moving from main to v2
+[33m5de7558[m[33m ([m[1;32mmain[m[33m)[m HEAD@{8}: commit: first commit
+[33m2db02aa[m HEAD@{9}: Branch: renamed refs/heads/main to refs/heads/main
+[33m2db02aa[m HEAD@{11}: Branch: renamed refs/heads/master to refs/heads/main
+[33m2db02aa[m HEAD@{13}: commit (initial): first commit
