@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Needy, NeedyImage, ReviewsImage, Reviews, TelegramUser
+from .models import Needy, NeedyImage, ReviewsImage, Reviews, CharityStatistics
 from unfold.admin import ModelAdmin
+from user_auth.models import CustomUser
 
 
 class ReviewsImageInline(admin.TabularInline):
@@ -29,7 +30,13 @@ class ReviewsAdmin(ModelAdmin):
     list_display_links = ['id', 'title']
 
 
-@admin.register(TelegramUser)
-class ReviewsAdmin(ModelAdmin):
-    list_display = ['id', 'user_id', 'username', 'joined_at']
-    list_display_links = ['id', 'user_id']
+@admin.register(CustomUser)
+class CustomUserAdmin(ModelAdmin):
+    list_display = ['id', 'email', 'username']
+    list_display_links = ['id', 'email']
+
+
+@admin.register(CharityStatistics)
+class CharityStatisticsAdmin(ModelAdmin):
+    list_display = ['id', 'total_donations']
+    list_display_links = ['id', 'total_donations']
