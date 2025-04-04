@@ -1,75 +1,64 @@
-import os
-from django.shortcuts import redirect
-import requests
-from dotenv import load_dotenv
-from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
-from .models import Question, UserResponse, UserPhone
-from .serializers import QuestionSerializer
-from user_auth.models import CustomUser
 
-load_dotenv()
-
-BOT_USERNAME = os.getenv("BOT_USERNAME")
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
+from .models import UserPhone, Question, UserResponse, AdminAudio
+from .serializers import UserPhoneSerializer, QuestionSerializer
 
 
-def redirect_to_bot(request):
-    return redirect(f"https://t.me/{BOT_USERNAME}")
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def save_phone_number(request):
+    serializer = UserPhoneSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Phone number saved"}, status=201)
+    return Response(serializer.errors, status=400)
 
 
-def notify_admin(user_id, username):
-    message = f"🚀 New User Started Bot!\n🆔 User ID: {user_id}\n👤 Username: @{username}"
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": ADMIN_CHAT_ID, "text": message}
-    requests.post(url, json=payload)
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_questions(request):
+    questions = Question.objects.all()
+    serializer = QuestionSerializer(questions, many=True)
+    return Response(serializer.data)
 
 
-class QuestionListView(ListAPIView):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-
-
-class SavePhoneNumberView(APIView):
-    permission_classes = [AllowAny]
-
+class SaveResponsesView(APIView):
     def post(self, request):
-        user_id = request.data.get("user_id")
-        username = request.data.get("username")
-        phone_number = request.data.get("phone_number")
+        responses = request.data.get("responses", [])
+        if not responses:
+            return Response({"error": "No responses provided"}, status=400)
 
-        if not user_id or not phone_number:
-            return Response({"error": "User ID and phone number are required"}, status=400)
+        for response in responses:
+            user, _ = UserPhone.objects.get_or_create(user_id=response["user_id"])
+            UserResponse.objects.create(
+                user=user,
+                question_id=response["question"],
+                response=response["response"]
+            )
 
-        user, created = UserPhone.objects.update_or_create(
-            user_id=user_id,
-            defaults={"username": username, "phone_number": phone_number}
-        )
-        return Response({"message": "Phone number saved successfully"})
+        return Response({"message": "Responses saved successfully"}, status=201)
 
 
-class SaveUserResponseView(APIView):
-    permission_classes = [AllowAny]
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def check_user_status(request, user_id):
+    user_exists = UserPhone.objects.filter(user_id=user_id).exists()
+    quiz_completed = UserResponse.objects.filter(user__user_id=user_id).exists()
 
-    def post(self, request):
-        user_id = request.data.get("user_id")
-        username = request.data.get("username")
-        question_id = request.data.get("question")
-        response_text = request.data.get("response")
+    if user_exists and quiz_completed:
+        return Response({"status": "completed"}, status=200)
+    elif user_exists:
+        return Response({"status": "registered"}, status=200)
+    return Response({"status": "not_registered"}, status=404)
 
-        try:
-            user = UserPhone.objects.get(user_id=user_id)
-        except UserPhone.DoesNotExist:
-            return Response({"error": "User not found. Please register your phone number first."}, status=400)
 
-        try:
-            question = Question.objects.get(id=question_id)
-        except Question.DoesNotExist:
-            return Response({"error": "Question not found"}, status=400)
-
-        UserResponse.objects.create(user=user, question=question, response=response_text)
-
-        return Response({"message": "Response saved successfully"})
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_audio(request):
+    audio = AdminAudio.objects.first()
+    if audio:
+        return Response({"audio_url": audio.audio.url})
+    return Response({"audio_url": None})

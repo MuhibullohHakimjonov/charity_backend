@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question, UserResponse, UserPhone
+from .models import Question, UserResponse, UserPhone, AdminAudio
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -17,4 +17,10 @@ class UserPhoneSerializer(serializers.ModelSerializer):
 class UserResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserResponse
+        fields = "__all__"
+
+
+class AdminAudioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminAudio
         fields = "__all__"

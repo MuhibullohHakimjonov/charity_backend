@@ -1,10 +1,10 @@
 from django.urls import path
-
-from .views import redirect_to_bot, QuestionListView, SavePhoneNumberView, SaveUserResponseView
+from .views import save_phone_number, get_questions, SaveResponsesView, check_user_status, get_audio
 
 urlpatterns = [
-    path('redirect-to-bot/', redirect_to_bot, name='redirect-to-bot'),
-    path("questions/", QuestionListView.as_view(), name="question-list"),
-    path("save_phone/", SavePhoneNumberView.as_view(), name="save_phone"),
-    path("responses/", SaveUserResponseView.as_view(), name="user-response-create"),
+    path("save_phone/", save_phone_number),
+    path("questions/", get_questions),
+    path("responses/", SaveResponsesView.as_view()),
+    path("check_user/<int:user_id>/", check_user_status),
+    path("get_audio/", get_audio),
 ]
