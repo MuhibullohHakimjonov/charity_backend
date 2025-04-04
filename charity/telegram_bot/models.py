@@ -1,4 +1,8 @@
+import os
+
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.dispatch import receiver
 
 
 class Question(models.Model):
@@ -6,6 +10,23 @@ class Question(models.Model):
 
     def __str__(self):
         return self.text
+
+
+def validate_audio_file(value):
+    valid_extensions = ['.mp3', '.ogg']
+    if not any(value.name.lower().endswith(ext) for ext in valid_extensions):
+        raise ValidationError("Only MP3 and MP4 files are allowed.")
+
+
+class AdminAudio(models.Model):
+    audio = models.FileField(upload_to="audios/", validators=[validate_audio_file])
+
+    def __str__(self):
+        return self.audio.name
+
+    class Meta:
+        verbose_name = 'Audio'
+        verbose_name_plural = 'Audios'
 
 
 class UserPhone(models.Model):
